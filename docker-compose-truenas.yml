@@ -7,7 +7,7 @@ services:
     volumes:
       # Mapping for 1 complete PS3NetSrv folder
       - "/mnt/Spinning Rust/Games/PS3:/games"
-      # Individual mappings for each standard PS3 media subfolder
+      # Individual mappings for each standard PS3 media subfolder if not included in your main folder
       #- "/mnt/Spinning Rust/Games/PS3/GAMES:/games/GAMES"
       - "/mnt/Spinning Rust/Games/ISOs/Playstation 3:/games/PS3ISO"
       - "/mnt/Spinning Rust/Games/ISOs/Playstation:/games/PSXISO"
@@ -18,10 +18,10 @@ services:
     command: >
       bash -c "
       apt-get update >/dev/null 2>&1 && 
-      apt-get install -y wget unzip build-essential >/dev/null 2>&1 &&
+      apt-get install -y wget unzip bsdutils libstdc++6 >/dev/null 2>&1 &&
       wget -q https://github.com/aldostools/ps3netsrv/releases/download/20250501/ps3netsrv_20250501_linux.zip &&
       unzip -q ps3netsrv_20250501_linux.zip &&
       mv ps3netsrv_20250501 ps3netsrv &&
       chmod +x ./ps3netsrv/ps3netsrv_linuxX86_64 &&
-      exec script -q -c 'stdbuf -oL -eL ./ps3netsrv/ps3netsrv_linuxX86_64 /games 38008' /dev/null
+      exec script -q -c \"stdbuf -oL -eL ./ps3netsrv/ps3netsrv_linuxX86_64 /games 38008\" /dev/null
       "
