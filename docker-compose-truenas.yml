@@ -17,11 +17,14 @@ services:
       #- "/mnt/Spinning Rust/Games/PS3/BDISO:/games/BDISO"
     command: >
       bash -c "
-      apt-get update >/dev/null 2>&1 && 
+      if [ ! -x ./ps3netsrv/ps3netsrv_linuxX86_64 ]; then
+      apt-get update >/dev/null 2>&1 &&
       apt-get install -y wget unzip bsdutils libstdc++6 >/dev/null 2>&1 &&
+      rm -rf ps3netsrv ps3netsrv_20250501 ps3netsrv_20250501_linux.zip* &&
       wget -q https://github.com/aldostools/ps3netsrv/releases/download/20250501/ps3netsrv_20250501_linux.zip &&
       unzip -q ps3netsrv_20250501_linux.zip &&
       mv ps3netsrv_20250501 ps3netsrv &&
-      chmod +x ./ps3netsrv/ps3netsrv_linuxX86_64 &&
+      chmod +x ./ps3netsrv/ps3netsrv_linuxX86_64 || exit 1;
+      fi;
       exec script -q -c \"stdbuf -oL -eL ./ps3netsrv/ps3netsrv_linuxX86_64 /games 38008\" /dev/null
       "
